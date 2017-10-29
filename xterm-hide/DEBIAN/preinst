@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+package_name=xterm-hide
+mkdir -p "/usr/share/dpkgdivert/xterm-hide"
+case "$1" in
+  install)
+    dpkg-divert --package "$package_name" --divert "/usr/share/dpkgdivert/xterm-hide/usrshareapplicationsdebian-uxterm.desktop" --rename "/usr/share/applications/debian-uxterm.desktop"
+    dpkg-divert --package "$package_name" --divert "/usr/share/dpkgdivert/xterm-hide/usrshareapplicationsdebian-xterm.desktop" --rename "/usr/share/applications/debian-xterm.desktop"
+    ;;
+  upgrade)
+if [ "$(dpkg-divert --list "/usr/share/applications/debian-uxterm.desktop")" = "" ]
+then
+    dpkg-divert --package "$package_name" --divert "/usr/share/dpkgdivert/xterm-hide/usrshareapplicationsdebian-uxterm.desktop" --rename "/usr/share/applications/debian-uxterm.desktop"
+fi
+if [ "$(dpkg-divert --list "/usr/share/applications/debian-xterm.desktop")" = "" ]
+then
+    dpkg-divert --package "$package_name" --divert "/usr/share/dpkgdivert/xterm-hide/usrshareapplicationsdebian-xterm.desktop" --rename "/usr/share/applications/debian-xterm.desktop"
+fi
+;;
+esac
+exit 0
